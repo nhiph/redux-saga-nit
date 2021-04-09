@@ -17,36 +17,25 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TaskForm from '../../components/taskForm';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as taskActions from './../../actions/task';
+import PropTypes from 'prop-types';
 
-
-
-const listTask = [
-    {
-        id: 1,
-        title: "Read book",
-        description: "Read material UI book",
-        status: 0   
-    },
-    {
-        id: 2,
-        title: "Play football",
-        description: "With my all friend",
-        status: 2   
-    },
-    {
-        id: 3,
-        title: "Play game",
-        description: "",
-        status: 1   
-    }
-];
 
 class Taskboard extends Component {
     state = {
         open: false
     };
 
+    componentDidMount(){
+        const {taskActionCreators} = this.props;
+        const {fetchListTaskRequest} = taskActionCreators;
+        fetchListTaskRequest();
+    }
+
     renderBoard = () => {
+        let {listTask} = this.props;
         const {classes} =this.props;
         let xhtml = null;
         xhtml = (
@@ -97,4 +86,23 @@ class Taskboard extends Component {
     }
 }
 
-export default withStyles(styles)(Taskboard);
+Taskboard.propTypes = {
+    classes: PropTypes.object,
+    taskActionCreators: PropTypes.shape({
+        fetchListTaskRequest: PropTypes.func,
+    }),
+};
+
+const mapStateToProps = state => {
+    return {
+        listTask: state.task.listTask,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        taskActionCreators: bindActionCreators(taskActions, dispatch)
+    }
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Taskboard));

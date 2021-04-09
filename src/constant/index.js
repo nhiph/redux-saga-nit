@@ -1,4 +1,4 @@
-export const API_ENDPOINT = 'http://localhost:3000';
+export const API_ENDPOINT = 'https://606fdbac85c3f0001746ef3c.mockapi.io';
 
 const STATUSES = [
     {
